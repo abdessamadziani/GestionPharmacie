@@ -1,10 +1,11 @@
 
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <windows.h>
+
 
 
 
@@ -23,6 +24,13 @@ void Afficher(Produit p[50],int nben);
 void croissant_nom(Produit p[],int nben);
 void decroissant_prix(Produit p[],int nben);
 void AcheterProduit(Produit p[],int nben);
+void Chercher_code(Produit p[],int nben);
+void Chercher_quantite(Produit p[],int nben);
+void Etat_du_stock(Produit p[],int nben);
+void Alimenter_le_stock(Produit p[],int nben);
+
+
+
 
 void make_tolower(char s[])
 {
@@ -129,15 +137,51 @@ int main()
             }break;
         case 5:
             {
+                     do
+               {
+                    printf("\t\t\t 1- Par Code \n");
+                    printf("\t\t\t 2- Par Quantite \n");
+                    printf("\t\t\t 3- Menu Principale \n");
+
+                   do
+                 {
+            printf("\tVeuillez entree Votre choix : \t");
+            scanf("%d",&choix);
+             if(choix<1 || choix>3)
+                printf(" Attention Votre Choix doit Etre Compris Entre 1 et 3 \n");
+
+                 }while(choix<1 || choix>3);
+                 switch(choix)
+                 {
+                     case 1:
+                     {
+                          Chercher_code(p,nben);
+
+                     }break;
+                     case 2:
+                     {
+                         Chercher_quantite(p,nben);
+
+                     }break;
+                     default:
+                     {
+
+                     }break;
+                 }
+
+
+               }while(choix !=3);
+
 
             }break;
         case 6:
             {
-
+                  Etat_du_stock(p,nben);
 
             }break;
         case 7:
             {
+                Alimenter_le_stock(p,nben);
 
 
             }break;
@@ -172,13 +216,9 @@ void Ajouter(Produit p[],int *poi)
     printf("Veuillez entrre le code :\t");
     scanf("%s",p[i].code);
     printf("Veuillez entrre le nom de produit :\t");
-    //scanf("%s",make_tolower(p[i].nom));
     scanf("%s",p[i].nom);
     make_tolower(p[i].nom);
    printf("%s",p[i].nom);
-
-    //char x_nom[]=p[i].nom;
-   // make_tolower(x_nom);
      printf("Veuillez entrre la quantite :\t");
     scanf("%d",&p[i].quantite);
      printf("Veuillez entrre le prix :\t");
@@ -203,6 +243,7 @@ void AjouterPlusieurs(Produit p[],int *poi)
     scanf("%s",p[i].code);
     printf("Veuillez entrre le nom de produit :\t");
     scanf("%s",p[i].nom);
+    make_tolower(p[i].nom);
     printf("Veuillez entrre la quantite :\t");
     scanf("%d",&p[i].quantite);
      printf("Veuillez entrre le prix :\t");
@@ -227,9 +268,9 @@ void croissant_nom(Produit p[],int nben)
     do
     {
         ech=0;
-        for(i=0;i<nben;i++)
+        for(i=0;i<nben-1;i++)
         {
-            if(strcmp(p[i+1].nom,p[i].nom)>0)
+            if(strcmp(p[i].nom,p[i+1].nom)>0)
             {
                 Produit tmp;
                 tmp=p[i+1];
@@ -255,7 +296,7 @@ void croissant_nom(Produit p[],int nben)
     do
     {
         ech=0;
-        for(i=0;i<nben;i++)
+        for(i=0;i<nben-1;i++)
         {
             if(p[i].prix<p[i+1].prix)
             {
@@ -280,21 +321,128 @@ void croissant_nom(Produit p[],int nben)
    void AcheterProduit(Produit p[],int nben)
     {
         char x_code[15];
-        int trouve=1;
-
-        printf("Veuillez donner le code de produit acheter:\t");
+        int x_quantite;
+        printf("Veuillez donner le code de produit a acheter:\t");
         scanf("%s",x_code);
         for(i=0;i<nben;i++)
         {
             if (strcmp(p[i].code,x_code)==0)
             {
                  printf("existe\n");
-                 p[i].quantite -=1;
+                 printf("donner la quantite a deduire\t");
+                 scanf("%d",&x_quantite);
+                 if(x_quantite>p[i].quantite)
+                 {
+                     printf("votre stock inferieur de %d",x_quantite);
+                     return;
+                 }
+                 else
+                 {
+                     p[i].quantite -=x_quantite;
+                     return;
+                 }
+
+            }
+        }
+          printf("se produit n'existe pas\n");
+    }
+
+
+     void Chercher_code(Produit p[],int nben)
+    {
+        char x_code[15];
+        printf("Veuillez donner le code de produit a Rechercher:\t");
+        scanf("%s",x_code);
+        for(i=0;i<nben;i++)
+        {
+            if (strcmp(p[i].code,x_code)==0)
+            {
+                system("cls");
+                 printf("existe\n");
+                printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
                 return;
             }
         }
           printf("se produit n'existe pas\n");
     }
+
+    void Chercher_quantite(Produit p[],int nben)
+    {
+        int x_quantite;
+        int trouve=0;
+
+        printf("Veuillez donner la quantite :\t");
+        scanf("%d",&x_quantite);
+        for(i=0;i<nben;i++)
+        {
+            if (p[i].quantite == x_quantite)
+            {
+                printf("existe\n");
+                printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
+                trouve++;
+
+            }
+        }
+        if(trouve==NULL)
+          printf(" Quantite n'existe pas\n");
+    }
+
+    void Etat_du_stock(Produit p[],int nben)
+    {
+        for(i=0;i<nben-1;i++)
+        {
+            if(p[i].quantite<3)
+            printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
+        }
+
+    }
+
+    void Alimenter_le_stock(Produit p[],int nben)
+    {
+        char x_code_add[15];
+        int x_quantite_add;
+        printf("Veuillez donner le code de produit :\t");
+        scanf("%s",x_code_add);
+        for(i=0;i<nben;i++)
+        {
+            if (strcmp(p[i].code,x_code_add)==0)
+            {
+                 printf("existe\n");
+                 printf("donner la quantiter :\t");
+                 scanf("%d",&x_quantite_add);
+                 p[i].quantite += x_quantite_add;
+                return;
+            }
+        }
+          printf("se produit n'existe pas\n");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
