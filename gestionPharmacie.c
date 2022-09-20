@@ -1,10 +1,11 @@
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <windows.h>
+#include <time.h>
+
+
 
 
 
@@ -15,8 +16,22 @@ typedef struct
     int quantite;
     char code[15],nom[15];
     float prix,prixTTC;
+    float total_p;
+
+    //int day,month,year;
+
 
 }Produit;
+
+typedef struct
+{
+
+    float min,max;
+    int day_achat;
+    int month_achat;
+    int year_achat;
+    float total,moyenne,quantiteTotal;
+}Stat;
 
 void Ajouter(Produit p[],int *poi);
 void AjouterPlusieurs(Produit p[],int *poi);
@@ -28,6 +43,10 @@ void Chercher_code(Produit p[],int nben);
 void Chercher_quantite(Produit p[],int nben);
 void Etat_du_stock(Produit p[],int nben);
 void Alimenter_le_stock(Produit p[],int nben);
+void Supprimer(Produit p[],int *poi);
+void Statistique_de_vente();
+
+
 
 
 
@@ -42,8 +61,11 @@ void make_tolower(char s[])
 }
 
 int n,i,nben=0,choix,ech;
+float total;
 
 Produit p[50];
+Stat s;
+
 
 int main()
 {
@@ -187,12 +209,11 @@ int main()
             }break;
        case 8:
             {
-
-
+            Supprimer(p,poi);
             }break;
        case 9:
             {
-
+             Statistique_de_vente();
 
             }break;
         default:
@@ -311,7 +332,7 @@ void croissant_nom(Produit p[],int nben)
     }while(ech>0);
 
 
-    printf("***************affichage les produits selon ordre decroissant du prix****************\n");
+    printf("***************affichage les produits selon ordre decroissant du prix****************\n");
     for(i=0;i<nben;i++)
     {
      printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
@@ -333,15 +354,33 @@ void croissant_nom(Produit p[],int nben)
                  scanf("%d",&x_quantite);
                  if(x_quantite>p[i].quantite)
                  {
-                     printf("votre stock inferieur de %d",x_quantite);
+                     printf(" impossible votre stock inferieur de %d",x_quantite);
                      return;
                  }
                  else
                  {
-                     p[i].quantite -=x_quantite;
+                      p[i].quantite -=x_quantite;
+                      s.quantiteTotal+=1;
+                      s.total+=(p[i].prix)*x_quantite;
+                      s.moyenne=s.total/s.quantiteTotal;
+                      p[i].total_p+=p[i].prix*x_quantite;
+                      float ma=p[i].total_p;
+                      float mi=p[i].total_p;
+                      s.min=10000;
+
+
+
+                          if(s.max<ma)
+                          {
+                              s.max=ma;
+                          }
+                           if(s.min<mi)
+                          {
+                              s.min=mi;
+                          }
+
                      return;
                  }
-
             }
         }
           printf("se produit n'existe pas\n");
@@ -383,13 +422,13 @@ void croissant_nom(Produit p[],int nben)
 
             }
         }
-        if(trouve==NULL)
+        if(trouve == NULL)
           printf(" Quantite n'existe pas\n");
     }
 
     void Etat_du_stock(Produit p[],int nben)
     {
-        for(i=0;i<nben-1;i++)
+        for(i=0;i<nben;i++)
         {
             if(p[i].quantite<3)
             printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
@@ -418,40 +457,43 @@ void croissant_nom(Produit p[],int nben)
     }
 
 
+     void Supprimer(Produit p[],int *poi)
+    {
+        char x_code_produit[15];
+       printf("entree le code de produit:\t") ;
+       scanf("%s",x_code_produit);
+       for(i=0;i<nben;i++)
+       {
+           if(strcmp(x_code_produit,p[i].code)==0)
+           {
+               p[i]=p[i+1];
+               (*poi)--;
+               return;
+           }
+       }
+       printf("se code n'existe pas");
+
+
+    }
+
+    void Statistique_de_vente()
+    {
+          time_t now = time(NULL);
+          struct tm *dt =localtime(&now);
+                     s.day_achat=(dt->tm_mday);
+                     s.month_achat=(dt->tm_mon+1);
+                     s.year_achat=(dt->tm_year+1900);
+
+        printf("le total des prix des produits vendus en journee courante :\n");
+        printf(" ==> %d / %d /  %d ==> prix total :  %.2f Dh\n",s.day_achat,s.month_achat,s.year_achat,s.total);
+        printf("la moyenne des prix des produits vendus en journee courante\n");
+        printf(" ==> %d / %d /  %d ==> moyenne :  %.2f Dh\n",s.day_achat,s.month_achat,s.year_achat,s.moyenne);
+        printf("le Max des prix des produits vendus en journe courante : %.2f\n",s.max);
+        printf("le Min des prix des produits vendus en journe courante : %.2f\n",s.min);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   }
 
 
 
