@@ -18,15 +18,11 @@ typedef struct
     float prix,prixTTC;
     float total_p;
 
-    //int day,month,year;
-
-
 }Produit;
 
 typedef struct
 {
 
-    float min,max;
     int day_achat;
     int month_achat;
     int year_achat;
@@ -60,11 +56,11 @@ void make_tolower(char s[])
     }
 }
 
-int n,i,nben=0,choix,ech;
-float total;
-
-Produit p[50];
+int n,i,nben=0,choix,ech,j;
+float total,min=100000,max=0;
+Produit p[50],tmp;
 Stat s;
+FILE *f;
 
 
 int main()
@@ -72,27 +68,87 @@ int main()
     int *poi;
  poi=&nben;
 
+
+   system(" color 0A");
+    for(i=0;i<40;i++)
+    {
+        printf("*");
+        usleep(10000);
+    }
+    printf("bienvenue dans notre pharmacie");
+     for(i=0;i<40;i++)
+    {
+        printf("*");
+        usleep(10000);
+    }
+
+    printf("\n\n\t\t*****            *****      ************   ****         ***   ****         ****        \n");
+    usleep(1000);
+    printf("\t\t****  **       ** ****     **************   ******        ***   ****         ****        \n");
+     usleep(1000);
+    printf("\t\t****   **     **  ****    ***************  *** ***       ***   ****         ****        \n");
+    usleep(1000);
+    printf("\t\t****    **   **   ****    *****             ***  ***      ***   ****         ****        \n");
+    usleep(1000);
+    printf("\t\t****     ** **    ****    *****             ***   ***     ***   ****         ****        \n");
+    usleep(1000);
+    printf("\t\t****      ***     ****    ***************   ***    ***    ***   ****         ****        \n");
+     usleep(1000);
+    printf("\t\t****              ****    ***************   ***     ***   ***   ****         ****        \n");
+     usleep(1000);
+    printf("\t\t****              ****    ***************  ***      ***  ***   ****         ****        \n");
+   usleep(1000);
+    printf("\t\t****              ****    *****            ***       *** ***   ****         ****        \n");
+    usleep(1000);
+    printf("\t\t****              ****   *****             ***        ******   ****         ****        \n");
+    usleep(1000);
+    printf("\t\t****              ****   **************   ***         *****   ****         ****        \n");
+     usleep(1000);
+    printf("\t\t****              ****     **************   ***          ****    ***         ***         \n\n");
+    usleep(1000);
+
+     for(i=0;i<40;i++)
+    {
+        printf("*");
+        usleep(10000);
+    }
+    printf("bienvenue dans notre pharmacie");
+     for(i=0;i<40;i++)
+    {
+        printf("*");
+        usleep(10000);
+    }
+
     do
     {
 
-             //system("cls");
-        printf("\t\t\t\t\n:::::::::::::::::::::::::: Menu Principale ::::::::::::::::::::::::::\n\n");
-        printf("\t\t\t 1- Ajouter un produit  \n");
+    system("color 03");
+
+        printf("\n\n\t\t\t 1- Ajouter un produit  \n");
+        usleep(3000);
         printf("\t\t\t 2- Ajouter plusieurs produits  \n");
+        usleep(3000);
         printf("\t\t\t 3- Afficher les produits\n");
+         usleep(3000);
         printf("\t\t\t 4- Acheter produit \n");
+         usleep(3000);
         printf("\t\t\t 5- Rechercher les produits \n");
+         usleep(3000);
         printf("\t\t\t 6- Etat du stock\n");
+         usleep(3000);
         printf("\t\t\t 7- Alimenter le stock\n");
+         usleep(3000);
         printf("\t\t\t 8- Supprimer les produits \n");
+         usleep(3000);
         printf("\t\t\t 9- Statistique de vente\n");
+         usleep(3000);
         printf("\t\t\t 10-Quitter le programme \n");
 
 
 
         do
         {
-            printf("\tVeuillez entree Votre choix : \t");
+            printf("\n\tVeuillez entree Votre choix : \t");
             scanf("%d",&choix);
              if(choix<1 || choix>10)
                 printf(" Attention Votre Choix doit Etre Compris Entre 1 et 10 \n");
@@ -102,18 +158,19 @@ int main()
         {
         case 1:
             {
+
                 Ajouter(p,poi);
 
             }break;
         case 2:
             {
+
            AjouterPlusieurs(p,poi);
 
             }break;
 
         case 3:
             {
-               // Afficher(p,nben);
                do
                {
                     printf("\t\t\t 1- Lister les produits selon l’ordre alphabetique croissant du nom \n");
@@ -131,11 +188,13 @@ int main()
                  {
                      case 1:
                      {
+                         system("cls");
                          croissant_nom(p,nben);
 
                      }break;
                      case 2:
                      {
+                        system("cls");
                         decroissant_prix(p,nben);
 
                      }break;
@@ -154,7 +213,6 @@ int main()
         case 4:
             {
                  AcheterProduit(p,nben);
-
 
             }break;
         case 5:
@@ -214,17 +272,17 @@ int main()
        case 9:
             {
              Statistique_de_vente();
-
             }break;
+       case 10:
+            {
+                system("cls");
+              printf("\n\t\t\t->->->->->-> Fin de Programme <-<-<-<-<-<- \n\n\n ");
+            }break;
+
         default:
         break;
 
-
-
-
         }
-
-
 
     }while(choix!=10);
 
@@ -234,17 +292,31 @@ int main()
 void Ajouter(Produit p[],int *poi)
 {
     int i=*poi;
+    menu:
     printf("Veuillez entrre le code :\t");
     scanf("%s",p[i].code);
+    for(j=0;j<i;j++)
+    {
+        if(strcmp(p[i].code,p[j].code)==0)
+        {
+
+           printf("ce code de produit deja existe Veuillez entree un autre code \n");
+            goto menu;
+        }
+
+    }
     printf("Veuillez entrre le nom de produit :\t");
     scanf("%s",p[i].nom);
     make_tolower(p[i].nom);
-   printf("%s",p[i].nom);
-     printf("Veuillez entrre la quantite :\t");
+    printf("%s",p[i].nom);
+    printf("Veuillez entrre la quantite :\t");
     scanf("%d",&p[i].quantite);
-     printf("Veuillez entrre le prix :\t");
+    printf("Veuillez entrre le prix :\t");
     scanf("%f",&p[i].prix);
     (*poi)++;
+    return;
+
+
 }
 void AjouterPlusieurs(Produit p[],int *poi)
 {
@@ -255,13 +327,23 @@ void AjouterPlusieurs(Produit p[],int *poi)
      printf("le nombre d'enregistrement doit etre comprit entre 1 et 50\n");
     }while(n<1 || n>50);
 
-  int a=*poi;
-   // for(i=*poi;i<n;i++)
+    int a=*poi;
     for(i=a;i<a+n;i++)
     {
     printf("entrre les info de produit %d :\t\n",i+1);
+    menu:
     printf("Veuillez entrre le code produit :\t");
     scanf("%s",p[i].code);
+     for(j=0;j<i;j++)
+    {
+        if(strcmp(p[i].code,p[j].code)==0)
+        {
+
+           printf("ce code de produit deja existe Veuillez entree un autre code \n");
+            goto menu;
+        }
+
+    }
     printf("Veuillez entrre le nom de produit :\t");
     scanf("%s",p[i].nom);
     make_tolower(p[i].nom);
@@ -277,7 +359,6 @@ void Afficher(Produit p[50],int nben)
 {
 
     printf(" nben = %d\n",nben);
-    //printf("holla");
     for( i=0;i<nben;i++)
     {
     printf("les info de produit %d :\t\n",i+1);
@@ -304,7 +385,7 @@ void croissant_nom(Produit p[],int nben)
     }while(ech>0);
 
 
-    printf("***************affichage les produits selon ordre alphabetique croissant du nom****************\n");
+    printf("\n\n\n\t\t\t***************affichage les produits selon ordre alphabetique croissant du nom****************\n");
     for(i=0;i<nben;i++)
     {
      printf(" Code : %s \tNom: %s\t Quantite : %d\t Prix : \t %.2f DH  :\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix);
@@ -332,7 +413,7 @@ void croissant_nom(Produit p[],int nben)
     }while(ech>0);
 
 
-    printf("***************affichage les produits selon ordre decroissant du prix****************\n");
+    printf("\n\n\n\t\t\t***************affichage les produits selon ordre decroissant du prix****************\n");
     for(i=0;i<nben;i++)
     {
      printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
@@ -364,19 +445,17 @@ void croissant_nom(Produit p[],int nben)
                       s.total+=(p[i].prix)*x_quantite;
                       s.moyenne=s.total/s.quantiteTotal;
                       p[i].total_p+=p[i].prix*x_quantite;
-                      float ma=p[i].total_p;
-                      float mi=p[i].total_p;
-                      s.min=10000;
 
 
 
-                          if(s.max<ma)
+                          if(max<p[i].total_p)
                           {
-                              s.max=ma;
+                              max=p[i].total_p;
                           }
-                           if(s.min<mi)
+                           if(min>p[i].total_p)
                           {
-                              s.min=mi;
+                              printf("%.2f",min);
+                              min=p[i].total_p;
                           }
 
                      return;
@@ -428,10 +507,11 @@ void croissant_nom(Produit p[],int nben)
 
     void Etat_du_stock(Produit p[],int nben)
     {
+
         for(i=0;i<nben;i++)
         {
             if(p[i].quantite<3)
-            printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
+            printf("\n\n\t\t\tCode : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
         }
 
     }
@@ -460,17 +540,22 @@ void croissant_nom(Produit p[],int nben)
      void Supprimer(Produit p[],int *poi)
     {
         char x_code_produit[15];
+        int trouve=0;
        printf("entree le code de produit:\t") ;
        scanf("%s",x_code_produit);
        for(i=0;i<nben;i++)
        {
            if(strcmp(x_code_produit,p[i].code)==0)
            {
+
+               tmp=p[i];
                p[i]=p[i+1];
-               (*poi)--;
-               return;
+               p[i+1]=tmp;
+               trouve ++ ;
            }
        }
+       (*poi)--;
+       if(trouve == 0)
        printf("se code n'existe pas");
 
 
@@ -483,44 +568,24 @@ void croissant_nom(Produit p[],int nben)
                      s.day_achat=(dt->tm_mday);
                      s.month_achat=(dt->tm_mon+1);
                      s.year_achat=(dt->tm_year+1900);
+                      system("cls");
 
-        printf("le total des prix des produits vendus en journee courante :\n");
-        printf(" ==> %d / %d /  %d ==> prix total :  %.2f Dh\n",s.day_achat,s.month_achat,s.year_achat,s.total);
-        printf("la moyenne des prix des produits vendus en journee courante\n");
-        printf(" ==> %d / %d /  %d ==> moyenne :  %.2f Dh\n",s.day_achat,s.month_achat,s.year_achat,s.moyenne);
-        printf("le Max des prix des produits vendus en journe courante : %.2f\n",s.max);
-        printf("le Min des prix des produits vendus en journe courante : %.2f\n",s.min);
+        printf("\n\n\n \t\t\t\tle total des prix des produits vendus en journee courante :\n");
+        printf("\t\t\t\t ==> %d / %d /  %d ==> prix total :  %.2f Dh\n",s.day_achat,s.month_achat,s.year_achat,s.total);
+        printf("\t\t\t\tla moyenne des prix des produits vendus en journee courante\n");
+        printf("\t\t\t\t==> %d / %d /  %d ==> moyenne :  %.2f Dh\n",s.day_achat,s.month_achat,s.year_achat,s.moyenne);
+        printf("\t\t\t\tle Max des prix des produits vendus en journe courante : %.2f Dh\n",max);
+        printf("\t\t\t\tle Min des prix des produits vendus en journe courante : %.2f Dh\n",min);
+          f=fopen("fileapp","a");
+        fprintf(f,"\n\n\n \t\t\t\tle total des prix des produits vendus en journee courante :\n");
+        fprintf(f,"\t\t\t\t ==> %d / %d /  %d ==> prix total :  %.2f Dh\n",s.day_achat,s.month_achat,s.year_achat,s.total);
+        fprintf(f,"\t\t\t\tla moyenne des prix des produits vendus en journee courante\n");
+        fprintf(f,"\t\t\t\t==> %d / %d /  %d ==> moyenne :  %.2f Dh\n",s.day_achat,s.month_achat,s.year_achat,s.moyenne);
+        fprintf(f,"\t\t\t\tle Max des prix des produits vendus en journe courante : %.2f Dh\n",max);
+        fprintf(f,"\t\t\t\tle Min des prix des produits vendus en journe courante : %.2f Dh\n",min);
+        fclose(f);
+
 
 
 
    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
