@@ -7,10 +7,6 @@
 
 
 
-
-
-
-
 typedef struct
 {
     int quantite;
@@ -150,6 +146,7 @@ int main()
         {
             printf("\n\tVeuillez entree Votre choix : \t");
             scanf("%d",&choix);
+
              if(choix<1 || choix>10)
                 printf(" Attention Votre Choix doit Etre Compris Entre 1 et 10 \n");
 
@@ -300,8 +297,8 @@ void Ajouter(Produit p[],int *poi)
         if(strcmp(p[i].code,p[j].code)==0)
         {
 
-           printf("ce code de produit deja existe Veuillez entree un autre code \n");
-            goto menu;
+              printf("ce code de produit deja existe Veuillez entree un autre code \n");
+             goto menu;
         }
 
     }
@@ -311,10 +308,16 @@ void Ajouter(Produit p[],int *poi)
     printf("%s",p[i].nom);
     printf("Veuillez entrre la quantite :\t");
     scanf("%d",&p[i].quantite);
-    printf("Veuillez entrre le prix :\t");
-    scanf("%f",&p[i].prix);
+    do{
+             printf("Veuillez entrre le prix :\t");
+             scanf("%f",&p[i].prix);
+             if(p[i].prix<0)
+                printf("attention le prix doit etre superieur a 0");
+
+    }while(p[i].prix<0);
+
     (*poi)++;
-    return;
+
 
 
 }
@@ -386,11 +389,15 @@ void croissant_nom(Produit p[],int nben)
 
 
     printf("\n\n\n\t\t\t***************affichage les produits selon ordre alphabetique croissant du nom****************\n");
+    printf("\n\n\t\t\t--------------------------------------------------------------------------------------\n");
+
     for(i=0;i<nben;i++)
     {
-     printf(" Code : %s \tNom: %s\t Quantite : %d\t Prix : \t %.2f DH  :\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix);
-
+     printf("\n\t\t\t Code : %s  | Nom: %s  |  Quantite : %d  |  Prix :  | %.2f DH  :\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix);
+     printf("\n\t\t\t--------------------------------------------------------------------------------------\n");
     }
+    printf("\t\t\t--------------------------------------------------------------------------------------\n");
+
 }
 
     void decroissant_prix(Produit p[],int nben)
@@ -416,9 +423,12 @@ void croissant_nom(Produit p[],int nben)
     printf("\n\n\n\t\t\t***************affichage les produits selon ordre decroissant du prix****************\n");
     for(i=0;i<nben;i++)
     {
-     printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
+     printf("\n\t\t\t Code : %s  |  Nom: %s  |  Quantite : %d   |  Prix : %.2f Dh   |   PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
+     printf("\n\t\t\t--------------------------------------------------------------------------------------\n");
+
 
     }
+
 }
    void AcheterProduit(Produit p[],int nben)
     {
@@ -441,7 +451,7 @@ void croissant_nom(Produit p[],int nben)
                  else
                  {
                       p[i].quantite -=x_quantite;
-                      s.quantiteTotal+=1;
+                      s.quantiteTotal+=1;//  nb ventes
                       s.total+=(p[i].prix)*x_quantite;
                       s.moyenne=s.total/s.quantiteTotal;
                       p[i].total_p+=p[i].prix*x_quantite;
@@ -476,8 +486,11 @@ void croissant_nom(Produit p[],int nben)
             if (strcmp(p[i].code,x_code)==0)
             {
                 system("cls");
-                 printf("existe\n");
-                printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
+                printf("\n\n\t\t\t--------------------------------------------------------------------------------------\n");
+                printf("\texiste\n");
+                printf("\t\t\tCode : %s  |  Nom: %s  |  Quantite : %d Prix : %.2f Dh  |  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
+                printf("\n\t\t\t--------------------------------------------------------------------------------------\n");
+
                 return;
             }
         }
@@ -495,8 +508,8 @@ void croissant_nom(Produit p[],int nben)
         {
             if (p[i].quantite == x_quantite)
             {
-                printf("existe\n");
-                printf(" Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
+                printf("\n\t\t\t existe\n");
+                printf("\n\t\t\t Code : %s \tNom: %s\t Quantite : %d Prix : \t %.2f Dh  PrixTTc : %.2f Dh\n",p[i].code,p[i].nom,p[i].quantite,p[i].prix,(p[i].prix+(p[i].prix*0.15)));
                 trouve++;
 
             }
@@ -554,9 +567,15 @@ void croissant_nom(Produit p[],int nben)
                trouve ++ ;
            }
        }
-       (*poi)--;
+
        if(trouve == 0)
-       printf("se code n'existe pas");
+       {
+            printf("se code n'existe pas");
+            return;
+       }
+
+
+       (*poi)--;
 
 
     }
